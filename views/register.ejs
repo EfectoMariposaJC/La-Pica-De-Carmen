@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienvenido a <%= location.name %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="card">
+    <div class="avatar"><%= location.name.slice(0, 2).toUpperCase() %></div>
+    <h1><%= location.name %></h1>
+    <p class="subtitle">Registrate y suma tu primera visita</p>
+
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+
+    <form method="POST" action="/t/<%= location.slug %>/register">
+      <input type="text" name="name" placeholder="Tu nombre" required />
+      <input type="tel" name="phone" placeholder="+56 9 1234 5678" required />
+      <button type="submit">Registrarme</button>
+    </form>
+
+    <p class="fineprint">Al registrarte podras agregar tu tarjeta a Apple Wallet o Google Wallet.</p>
+  </div>
+</body>
+</html>
