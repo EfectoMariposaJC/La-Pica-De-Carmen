@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= location.name %> - Panel</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="dashboard-wrap">
+    <a href="/dashboard" class="back-link">&larr; Todos los locales</a>
+    <h1><%= location.name %></h1>
+
+    <div class="stats-grid">
+      <div class="stat-card"><span class="stat-label">Total clientes</span><span class="stat-value"><%= stats.total %></span></div>
+      <div class="stat-card"><span class="stat-label">Frecuentes</span><span class="stat-value"><%= stats.frecuentes %></span></div>
+      <div class="stat-card"><span class="stat-label">Nuevos</span><span class="stat-value"><%= stats.nuevos %></span></div>
+      <div class="stat-card"><span class="stat-label">Inactivos</span><span class="stat-value"><%= stats.inactivos %></span></div>
+    </div>
+
+    <h2>Clientes</h2>
+    <table class="customer-table">
+      <thead>
+        <tr><th>Nombre</th><th>Telefono</th><th>Visitas</th><th>Ultima visita</th><th>Segmento</th></tr>
+      </thead>
+      <tbody>
+        <% customers.forEach(function(c) { %>
+          <tr>
+            <td><%= c.name %></td>
+            <td><%= c.phone %></td>
+            <td><%= c.visits %></td>
+            <td><%= new Date(c.lastVisitAt).toLocaleDateString('es-CL') %></td>
+            <td><span class="badge badge-<%= c.segment %>"><%= c.segment %></span></td>
+          </tr>
+        <% }); %>
+        <% if (customers.length === 0) { %>
+          <tr><td colspan="5" class="empty">Todavia no hay clientes registrados en este local.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <h2>Enviar campana</h2>
+    <p class="hint">Esto registra el envio en el log. Para producto real, conecta aqui una API de WhatsApp/SMS (ver README).</p>
+    <form method="POST" action="/dashboard/<%= location.slug %>/campaign" class="campaign-form">
+      <select name="segment" required>
+        <option value="inactivo">Inactivos (no vuelven hace &gt;20 dias)</option>
+        <option value="frecuente">Frecuentes</option>
+        <option value="nuevo">Nuevos</option>
+      </select>
+      <input type="text" name="message" placeholder="Mensaje de la campana" required />
+      <button type="submit">Enviar</button>
+    </form>
+
+    <h2>Historial de campanas</h2>
+    <table class="customer-table">
+      <thead><tr><th>Fecha</th><th>Segmento</th><th>Mensaje</th><th>Destinatarios</th></tr></thead>
+      <tbody>
+        <% campaignLog.forEach(function(c) { %>
+          <tr>
+            <td><%= new Date(c.sentAt).toLocaleString('es-CL') %></td>
+            <td><%= c.segment %></td>
+            <td><%= c.message %></td>
+            <td><%= c.recipients %></td>
+          </tr>
+        <% }); %>
+        <% if (campaignLog.length === 0) { %>
+          <tr><td colspan="4" class="empty">Aun no has enviado campanas.</td></tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <h2>Tag NFC de este local</h2>
+    <p class="hint">Programa este link en el tag NFC con la app NFC Tools:</p>
+    <code class="tag-url">/t/<%= location.slug %></code>
+  </div>
+</body>
+</html>
