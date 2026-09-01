@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= location.name %></title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="card">
+    <div class="avatar"><%= location.name.slice(0, 2).toUpperCase() %></div>
+
+    <% if (isNew) { %>
+      <h1>Listo, <%= customer.name %></h1>
+      <p class="subtitle">Tu tarjeta esta lista</p>
+    <% } else { %>
+      <h1>Gracias por volver</h1>
+      <p class="subtitle">Sumaste una visita</p>
+    <% } %>
+
+    <div class="progress">
+      <div class="progress-label">
+        Visitas: <%= customer.visits %> / <%= location.visitsForReward %>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style="width: <%= Math.min(100, (customer.visits / location.visitsForReward) * 100) %>%"></div>
+      </div>
+    </div>
+
+    <% if (isNew) { %>
+      <div class="wallet-buttons">
+        <% if (wallet && wallet.mock) { %>
+          <p class="mock-note">Modo simulado: en produccion aqui apareceran los botones reales de Apple/Google Wallet.</p>
+        <% } else { %>
+          <a class="btn" href="<%= customer.walletShareUrl %>" target="_blank" rel="noopener">Agregar a Wallet</a>
+        <% } %>
+      </div>
+    <% } %>
+
+    <p class="fineprint">Vuelve a tocar el tag en tu proxima visita para sumar otro punto.</p>
+  </div>
+</body>
+</html>
